@@ -36,3 +36,4 @@ ADD CONSTRAINT "fk_registry_payment"
 FOREIGN KEY ("paymentId")
 REFERENCES "payments" ("id")
 ON DELETE RESTRICT;
+
