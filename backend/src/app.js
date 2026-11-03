@@ -2,12 +2,12 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { config } from './config/index.js';
-import { correlationIdMiddleware } from './shared/presentation/middlewares/correlationId.js';
-import { requestLoggerMiddleware } from './shared/presentation/middlewares/requestLogger.js';
-import { errorHandlerMiddleware } from './shared/presentation/middlewares/errorHandler.js';
+import { config } from './core/config/index.js';
+import { correlationIdMiddleware } from './core/middleware/correlationId.js';
+import { requestLoggerMiddleware } from './core/middleware/requestLogger.js';
+import { errorHandlerMiddleware } from './core/middleware/errorHandler.js';
 import { healthRoutes } from './routes/healthRoutes.js';
-import { errorResponse } from './shared/presentation/utils/response.js';
+import { errorResponse } from './core/http/response.js';
 
 export function createApp() {
   const app = express();
@@ -52,4 +52,3 @@ export function createApp() {
 
   return app;
 }
-

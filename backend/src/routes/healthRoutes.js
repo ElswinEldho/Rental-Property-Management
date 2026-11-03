@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { checkDatabaseConnection } from '../shared/infrastructure/database/prisma.js';
-import { successResponse } from '../shared/presentation/utils/response.js';
-import { config } from '../config/index.js';
+import { checkDatabaseConnection } from '../core/database/prisma.js';
+import { successResponse } from '../core/http/response.js';
+import { config } from '../core/config/index.js';
 
 const router = Router();
 
@@ -25,4 +25,3 @@ router.get('/health', async (req, res) => {
 });
 
 export const healthRoutes = router;
-
