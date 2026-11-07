@@ -1,7 +1,7 @@
 import { createApp } from './app.js';
-import { config } from './config/index.js';
-import { logger } from './shared/infrastructure/logger/logger.js';
-import { getPrismaClient } from './shared/infrastructure/database/prisma.js';
+import { config } from './core/config/index.js';
+import { logger } from './core/logger/logger.js';
+import { disconnectPrisma } from './core/database/prisma.js';
 
 const app = createApp();
 
@@ -22,8 +22,7 @@ async function gracefulShutdown(signal) {
   server.close(async () => {
     logger.info('HTTP server closed');
     try {
-      const prisma = getPrismaClient();
-      await prisma.$disconnect();
+      await disconnectPrisma();
       logger.info('Database client disconnected');
       process.exit(0);
     } catch (err) {
@@ -41,4 +40,3 @@ async function gracefulShutdown(signal) {
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-
