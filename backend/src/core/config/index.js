@@ -15,6 +15,9 @@ const envSchema = z.object({
   API_PREFIX: z.string().default('/api/v1'),
   CORS_ORIGIN: z.string().default('http://localhost:3000'),
   COOKIE_SECRET: z.string().min(32).default('development_cookie_secret_key_minimum_32_chars_long'),
+  JWT_ACCESS_SECRET: z.string().min(32).default('development_jwt_access_secret_key_minimum_32_chars_long'),
+  ACCESS_TOKEN_EXPIRY_SECONDS: z.string().transform(Number).default('900'), // 15 minutes
+  REFRESH_TOKEN_EXPIRY_DAYS: z.string().transform(Number).default('7'), // 7 days
   DATABASE_URL: z
     .string()
     .url()
@@ -34,4 +37,3 @@ if (!parsed.success) {
 
 export const config = Object.freeze(parsed.data);
 export default config;
-

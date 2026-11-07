@@ -1,9 +1,8 @@
 /**
- * Module Public API Boundary: authentication
- * 
- * In accordance with Clean Architecture & Modular Monolith rules:
- * - External modules MUST only import from this root index.js.
- * - Internal domain/application/infrastructure layers are strictly encapsulated.
+ * Public API Boundary: Authentication Module
  */
 
-export const MODULE_NAME = 'authentication';
+export { authRouter } from './presentation/routes/authRoutes.js';
+export { authenticate, ACCESS_COOKIE_NAME, REFRESH_COOKIE_NAME } from './presentation/middlewares/authenticate.js';
+export { TokenService } from './application/services/TokenService.js';
+export { PrismaAuthRepository } from './infrastructure/persistence/PrismaAuthRepository.js';

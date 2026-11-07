@@ -1,4 +1,4 @@
-import { ConflictError, NotFoundError, ValidationError, DatabaseError } from './AppError.js';
+import { ConflictError, NotFoundError, ValidationError, DatabaseError, AppError } from './AppError.js';
 
 /**
  * Maps Prisma Client error codes to standard domain/application errors.
@@ -6,9 +6,14 @@ import { ConflictError, NotFoundError, ValidationError, DatabaseError } from './
  * semantic HTTP response codes (409, 404, 400).
  *
  * @param {Error} error
- * @returns {AppError}
+ * @returns {Error}
  */
 export function mapPrismaError(error) {
+  // If the error is already an AppError (e.g. AuthenticationError thrown inside transaction), preserve it!
+  if (error instanceof AppError) {
+    return error;
+  }
+
   // Check for Prisma Known Request Error code
   if (error && typeof error.code === 'string') {
     switch (error.code) {
@@ -54,4 +59,3 @@ export function mapPrismaError(error) {
 
   return error;
 }
-
