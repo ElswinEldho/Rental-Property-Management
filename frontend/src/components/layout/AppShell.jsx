@@ -2,14 +2,15 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useAuth } from '@/providers/AuthProvider';
-import { TopBar, LogoutButton } from '@/components/navigation';
+import { TopBar, LogoutButton, NavItem } from '@/components/navigation';
 import { Avatar } from '@/components/ui/data-display';
-import { Building2, Home } from 'lucide-react';
+import { Building2, LayoutDashboard, Building, DoorOpen } from 'lucide-react';
 
 /**
  * Common App Shell Layout for Admin and Tenant portals.
- * Integrates TopBar, brand identifier, user profile summary, and Logout action.
+ * Integrates TopBar, brand identifier, sidebar navigation, user profile summary, and Logout action.
  *
  * @param {{
  *   title: string,
@@ -19,17 +20,41 @@ import { Building2, Home } from 'lucide-react';
  */
 export function AppShell({ title, roleBadge, children }) {
   const { user } = useAuth();
+  const pathname = usePathname();
 
   const userDisplayName = user
     ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email
     : '';
+
+  const isAdmin = user?.roles?.includes('ADMIN') || user?.roles?.includes('PROPERTY_MANAGER');
+
+  const adminNavItems = [
+    {
+      label: 'Dashboard',
+      href: '/admin/dashboard',
+      icon: <LayoutDashboard className="h-5 w-5" />,
+      active: pathname === '/admin/dashboard',
+    },
+    {
+      label: 'Properties',
+      href: '/admin/properties',
+      icon: <Building className="h-5 w-5" />,
+      active: pathname.startsWith('/admin/properties'),
+    },
+    {
+      label: 'Rental Units',
+      href: '/admin/units',
+      icon: <DoorOpen className="h-5 w-5" />,
+      active: pathname.startsWith('/admin/units'),
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <TopBar
         left={
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white shadow-sm">
               <Building2 className="h-5 w-5" />
             </div>
             <div>
@@ -61,12 +86,30 @@ export function AppShell({ title, roleBadge, children }) {
           </div>
         }
       />
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
-        {children}
-      </main>
+
+      <div className="flex-1 flex max-w-7xl w-full mx-auto">
+        {isAdmin && (
+          <aside className="w-56 shrink-0 hidden md:block py-6 pr-6 border-r border-slate-200">
+            <nav className="space-y-1">
+              {adminNavItems.map((item) => (
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  icon={item.icon}
+                  label={item.label}
+                  active={item.active}
+                />
+              ))}
+            </nav>
+          </aside>
+        )}
+
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
 
 export default AppShell;
-

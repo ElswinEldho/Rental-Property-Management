@@ -8,6 +8,8 @@ import { requestLoggerMiddleware } from './core/middleware/requestLogger.js';
 import { errorHandlerMiddleware } from './core/middleware/errorHandler.js';
 import { healthRoutes } from './routes/healthRoutes.js';
 import { authRouter } from './modules/authentication/index.js';
+import { propertyRouter } from './modules/properties/index.js';
+import { rentalUnitRouter } from './modules/rental-units/index.js';
 import { errorResponse } from './core/http/response.js';
 
 export function createApp() {
@@ -47,6 +49,8 @@ export function createApp() {
   // Versioned API Routes
   app.use(config.API_PREFIX, healthRoutes);
   app.use(`${config.API_PREFIX}/auth`, authRouter);
+  app.use(`${config.API_PREFIX}/properties`, propertyRouter);
+  app.use(`${config.API_PREFIX}/units`, rentalUnitRouter);
 
   // 404 Handler
   app.use((req, res) => {
