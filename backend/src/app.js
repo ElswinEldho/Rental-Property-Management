@@ -7,6 +7,7 @@ import { correlationIdMiddleware } from './core/middleware/correlationId.js';
 import { requestLoggerMiddleware } from './core/middleware/requestLogger.js';
 import { errorHandlerMiddleware } from './core/middleware/errorHandler.js';
 import { healthRoutes } from './routes/healthRoutes.js';
+import { authRouter } from './modules/authentication/index.js';
 import { errorResponse } from './core/http/response.js';
 
 export function createApp() {
@@ -23,6 +24,14 @@ export function createApp() {
     })
   );
 
+  // Prevent shared/browser caching of sensitive authenticated API responses
+  app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    next();
+  });
+
   // Body Parsing Middlewares
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -37,6 +46,7 @@ export function createApp() {
 
   // Versioned API Routes
   app.use(config.API_PREFIX, healthRoutes);
+  app.use(`${config.API_PREFIX}/auth`, authRouter);
 
   // 404 Handler
   app.use((req, res) => {

@@ -7,6 +7,8 @@ import { IconButton } from '@/components/ui/buttons/IconButton';
 
 /**
  * Password input with show/hide toggle.
+ * When password is NOT shown (type="password"): displays EyeOff icon.
+ * When password IS shown (type="text"): displays Eye (open eye) icon.
  */
 export function PasswordInput(props) {
   const [show, setShow] = useState(false);
@@ -20,9 +22,9 @@ export function PasswordInput(props) {
           aria-label={show ? 'Hide password' : 'Show password'}
           size="sm"
           onClick={() => setShow((s) => !s)}
-          className="text-slate-500"
+          className="text-slate-500 hover:text-slate-700"
         >
-          {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          {show ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
         </IconButton>
       }
     />
@@ -30,4 +32,3 @@ export function PasswordInput(props) {
 }
 
 export default PasswordInput;
-
